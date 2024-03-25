@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "learn",
-    "slug": "learn",
+    "name": "Todo",
+    "slug": "Todo",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",

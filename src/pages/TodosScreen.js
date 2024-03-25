@@ -7,8 +7,13 @@ const Todos = () => {
   //init local states
   const [todo, settodo] = useState("")
   const [todoList, settodolist] = useState([])
+  const [editTodo, seteditTodo] = useState(null)
 
   const HandleAddTodo = () => {
+
+    if (todo === ''){
+        return;
+     }
     settodolist([...todoList, {id: Date.now().toString(), title:todo}])
     settodo('')
   }
@@ -17,12 +22,28 @@ const Todos = () => {
     const updatedTodoList = todoList.filter((todo) => todo.id !== id)
     settodolist(updatedTodoList)
   }
+  const HandleEditTodo=(todo)=>{
+    seteditTodo(todo)
+    settodo(todo.title)
+  }
 
+  const handleUpdateTodo = () => {
+    const updatedTodos = todoList.map((item) => {
+      if (item.id === editTodo.id) {
+        return { ...item, title: todo };
+      }
+
+      return item;
+    });
+    settodolist(updatedTodos);
+    seteditTodo(null);
+    settodo("");
+  };
   const renderTodo = ({ item, index }) => {
     return (
       <View style={styles.list}>
         <Text style={styles.listtext}>{item.title}</Text>
-        <IconButton icon="pencil" iconColor='#fff' />
+        <IconButton icon="pencil" iconColor='#fff'  onPress={() => HandleEditTodo(item)}/>
         <IconButton icon="trash-can" iconColor='#fff' onPress={() => HandleDeleteTodo(item.id)} />
       </View>
     );
@@ -36,11 +57,19 @@ const Todos = () => {
         value={todo}
         onChangeText={(usertext) => settodo(usertext)}
       />
-      <TouchableOpacity style={styles.TouchableOpacity} onPress={HandleAddTodo}>
+    
+      {
+        editTodo ?  <TouchableOpacity style={styles.TouchableOpacity} onPress={handleUpdateTodo}>
         <Text style={styles.BtnText} >
-          Add
+          Save
         </Text>
-      </TouchableOpacity>
+      </TouchableOpacity> :
+       <TouchableOpacity style={styles.TouchableOpacity} onPress={HandleAddTodo}>
+       <Text style={styles.BtnText} >
+         Add
+       </Text>
+     </TouchableOpacity>
+      }
 
       <FlatList data={todoList} renderItem={renderTodo} />
 
